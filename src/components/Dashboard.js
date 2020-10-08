@@ -32,14 +32,33 @@ const data = [
 class Dashboard extends Component {
   // initial state
   state = {
-    loading: false,
+    loading: true,
     focused: null,
+    days: [],
+    appointments: {},
+    interviewers: {}
   };
-
+  
+  // Allows us to toggle focus/set the value of focused back to null
+  // if the value of focused is currently set to a panel
   selectPanel(id) {
     this.setState(previousState => ({
       focused: previousState.focused !== null ? null : id  
     }));
+  }
+
+  componentDidMount() {
+    const focused = JSON.parse(localStorage.getItem("focused"));
+
+    if (focused) {
+      this.setState({ focused });
+    }
+  }
+
+  componentDidUpdate(previousProps, previousState) {
+    if (previousState.focused !== this.state.focused) {
+      localStorage.setItem("focused", JSON.stringify(this.state.focused));
+    }
   }
 
   render() {
